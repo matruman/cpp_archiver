@@ -47,7 +47,6 @@ void     Compressor::run()
     putShort(&buffer, len);
     buffer.insert(buffer.end(), cname, cname + len);
     putInt(&buffer, blocks_count);
-    printf("\n");
     do {
         ifs.read(buff, BUFF_SIZE);
         lengthIn = ifs.gcount();
