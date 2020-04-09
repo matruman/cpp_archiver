@@ -2,12 +2,15 @@
 # define ARCHIVER_H
 
 # define BUFF_SIZE 4096
+# define MAX_THREAD 2
 # define MAX_BYTE 127
 # define LENGTH_ADDRESS 2
 # define MIN_OVERLAP 5
 
+# include <mutex>
+# include <thread>
+# include <chrono>
 # include <ctime>
-# include <unistd.h>
 # include <cassert>
 # include <stdio.h>
 # include <iostream>
@@ -16,7 +19,9 @@
 # include <vector>
 # include <fstream>
 # include <chrono>
-# include "Overlap.h"
-# include "Compressor.h"
+
+void    putShort(std::vector<char> *buffer, short val);
+void    putInt(std::vector<char> *buffer, int val);
+void    rev_endian(void *val, int size);
 
 #endif

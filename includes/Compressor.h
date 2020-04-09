@@ -2,6 +2,9 @@
 # define COMPRESSOR_H
 
 # include "archiver.h"
+# include "Overlap.h"
+# include "SynchronizedIO.h"
+
 
 class Compressor
 {
@@ -11,19 +14,21 @@ private:
     char                buff[BUFF_SIZE];
     bool                busy[BUFF_SIZE];
     std::vector<char>   buffer;
+    int                 id;
+    SynchronizedIO      *io;
     int                 lengthIn;
     int                 lengthOut;
 
 public:
-    Compressor(std::string *files)
+    Compressor(SynchronizedIO *io, int id)
     {
         std::fill(buff, buff + BUFF_SIZE, 0);
         std::fill(busy, busy + BUFF_SIZE, 0);
         std::fill(overlaps, overlaps + BUFF_SIZE, Overlap());
-        this->files = files;
+        this->io = io;
+        this->id = id;
     }
     void run();
-    void readBlock();
     void getOverlaps();
     int getOverlap(int origin, int pos);
     int getEmpty(int start);
@@ -31,7 +36,7 @@ public:
     int getEmptyLength(int start);
     void setNewPositions();
     int insertEmptyBytes(int start);
-    void output(std::ofstream *ofs);
+    void output();
 };
 
 #endif
