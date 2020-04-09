@@ -10,7 +10,7 @@ class ParallelCompressor
 {
     private:
     string *files;
-    thread threads[MAX_THREAD];
+    thread *threads[MAX_THREAD];
     Compressor *compressors[MAX_THREAD];
     
     public:
