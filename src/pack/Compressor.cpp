@@ -5,6 +5,7 @@
 void     Compressor::run()
 {
     do {
+        // printf("Hello\n");
         lengthIn = io->read(id, buff);
         getOverlaps();
         setNewPositions();

@@ -2,7 +2,7 @@
 # define ARCHIVER_H
 
 # define BUFF_SIZE 4096
-# define MAX_THREAD 2
+# define MAX_THREAD 4
 # define MAX_BYTE 127
 # define LENGTH_ADDRESS 2
 # define MIN_OVERLAP 5

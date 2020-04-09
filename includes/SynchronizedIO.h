@@ -12,9 +12,9 @@ class SynchronizedIO
     volatile int last_reader;
     volatile int last_writer;
     mutex locker;
-    int next_id(int id, int last)
+    int next_id(int last)
     {
-        return id == MAX_THREAD - 1 ? 0 : id + 1;
+        return last == MAX_THREAD - 1 ? 0 : last + 1;
     }
     
     public:
@@ -22,8 +22,8 @@ class SynchronizedIO
     {
         this->ifs = ifs;
         this->ofs = ofs;
-        last_reader = MAX_THREAD;
-        last_writer = MAX_THREAD;
+        last_reader = MAX_THREAD - 1;
+        last_writer = MAX_THREAD - 1;
     }
     int read(int id, char *buff);
     int write(int id, vector<char> *buffer);

@@ -32,6 +32,10 @@ void    ParallelCompressor::run()
         compressors[i] = new Compressor(&io, i);
         threads[i] = thread(run_thread, compressors[i]);
     }
+    for(int i = 0; i < MAX_THREAD; i++)
+    {
+        threads[i].join();
+    }
     ifs.close();
     ofs.close();
 }

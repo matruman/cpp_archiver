@@ -1,10 +1,10 @@
 NAME			= archiver.exe
 
-CC				= g++
+CC				= clang++
 HEADER_DIR		= includes
 HEADER			= includes/archiver.h includes/Overlap.h
 
-CFLAGS			= -I $(HEADER_DIR) -O2 -std=c++17
+CFLAGS			= -I $(HEADER_DIR) -O2
 
 SRC				= 	src/main.cpp \
 					src/pack/ParallelCompressor.cpp \
