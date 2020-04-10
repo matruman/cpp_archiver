@@ -10,7 +10,6 @@ class Compressor
 {
 private:
     Overlap             overlaps[BUFF_SIZE];
-    std::string         *files;
     char                buff[BUFF_SIZE];
     bool                busy[BUFF_SIZE];
     std::vector<char>   buffer;

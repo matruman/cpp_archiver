@@ -2,7 +2,11 @@ NAME			= archiver.exe
 
 CC				= clang++
 HEADER_DIR		= includes
-HEADER			= includes/archiver.h includes/Overlap.h
+HEADER			= includes/archiver.h \
+				  includes/Overlap.h \
+				  includes/Compressor.h \
+				  includes/ParallelCompressor.h \
+				  includes/SynchronizedIO.h
 
 CFLAGS			= -I $(HEADER_DIR) -O2
 

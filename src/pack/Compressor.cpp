@@ -52,13 +52,13 @@ void    Compressor::getOverlaps()
     int j;
     int length;
     int tmp;
-    while (i < lengthIn - 2 * MIN_OVERLAP)
+    while (i < lengthIn - MAX_BYTE - MIN_OVERLAP)
     {
         if (busy[i]) {
             i = getEmpty(i);
             continue;
         }
-        j = i + 127;
+        j = i + MAX_BYTE;
         length = 0;
         while (j < lengthIn - MIN_OVERLAP) {
             if (busy[j]) {
@@ -67,7 +67,7 @@ void    Compressor::getOverlaps()
             }
             if ((tmp = getOverlap(i, j)) >= MIN_OVERLAP) {
                 if (tmp > length) {
-                    if (length != 0)
+                    if (overlaps[i].isSet())
                         overlaps[i].setLength(tmp);
                     length = tmp;
                 }
@@ -77,13 +77,13 @@ void    Compressor::getOverlaps()
                 j += tmp;
                 continue;
             }
-            j++;
+            ++j;
         }
         if (overlaps[i].isSet()) {
             setBusy(overlaps[i]);
             i += overlaps[i].getLength();
         }
-        i++;
+        ++i;
     }
 }
 
@@ -160,15 +160,15 @@ int     Compressor::getEmpty(int start)
 {
     int i = start;
     while (i < lengthIn && busy[i])
-        i++;
+        ++i;
     return i;
 }
 
 int     Compressor::getOverlap(int origin, int pos)
 {
     int i = 0;
-    while (i < 127 && i + pos < lengthIn && !busy[origin + i]
+    while (i < MAX_BYTE && i + pos < lengthIn && !busy[origin + i]
     && !busy[pos + i] && buff[origin + i] == buff[pos + i])
-        i++;
+        ++i;
     return i;
 }

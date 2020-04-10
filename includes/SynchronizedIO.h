@@ -11,7 +11,6 @@ class SynchronizedIO
     ofstream *ofs;
     volatile int last_reader;
     volatile int last_writer;
-    mutex locker;
     int next_id(int last)
     {
         return last == MAX_THREAD - 1 ? 0 : last + 1;
