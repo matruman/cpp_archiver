@@ -2,7 +2,7 @@
 #include "ParallelCompressor.h"
 using namespace std;
 
-int main()
+int main(int argc, char **argv)
 {
     string files[1]{"IMG.jpg"};
     int t1, t2;
