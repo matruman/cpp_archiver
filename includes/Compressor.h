@@ -9,7 +9,7 @@
 class Compressor
 {
 private:
-    Overlap             overlaps[BUFF_SIZE];
+    Overlap             *overlaps[BUFF_SIZE];
     char                buff[BUFF_SIZE];
     bool                busy[BUFF_SIZE];
     std::vector<char>   buffer;
@@ -23,7 +23,7 @@ public:
     {
         std::fill(buff, buff + BUFF_SIZE, 0);
         std::fill(busy, busy + BUFF_SIZE, 0);
-        std::fill(overlaps, overlaps + BUFF_SIZE, Overlap());
+        std::fill(overlaps, overlaps + BUFF_SIZE, nullptr);
         this->io = io;
         this->id = id;
     }
@@ -31,7 +31,7 @@ public:
     void getOverlaps();
     int getOverlap(int origin, int pos);
     int getEmpty(int start);
-    void setBusy(Overlap overlap);
+    void setBusy(Overlap *overlap);
     int getEmptyLength(int start);
     void setNewPositions();
     int insertEmptyBytes(int start);

@@ -13,7 +13,10 @@ void     Compressor::run()
         output();
         std::fill(buff, buff + BUFF_SIZE, 0);
         std::fill(busy, busy + BUFF_SIZE, 0);
-        std::fill(overlaps, overlaps + BUFF_SIZE, Overlap());
+        for (int i = 0; i < lengthIn; i++)
+            if (overlaps[i] != nullptr)
+                delete(overlaps[i]);
+        std::fill(overlaps, overlaps + BUFF_SIZE, nullptr);
         buffer.clear();
     } while (lengthIn == BUFF_SIZE);
 }
@@ -25,18 +28,18 @@ void  Compressor::output()
 
     for(int i = 0; i < lengthIn; i++) {
 
-        if (overlaps[i].isSet()) {
-            if (overlaps[i].isOrigin()) {
-                buffer.push_back((char)overlaps[i].getLength());
-                buffer.insert(buffer.end(), buff + overlaps[i].getPosition(),
-                buff + overlaps[i].getPosition() + overlaps[i].getLength());
-                i += overlaps[i].getLength() - 1;
+        if (overlaps[i] != nullptr) {
+            if (overlaps[i]->isOrigin()) {
+                buffer.push_back((char)overlaps[i]->getLength());
+                buffer.insert(buffer.end(), buff + overlaps[i]->getPosition(),
+                buff + overlaps[i]->getPosition() + overlaps[i]->getLength());
+                i += overlaps[i]->getLength() - 1;
             }
             else {
-                buffer.push_back(-(char)overlaps[i].getLength());
-                value = (short)overlaps[overlaps[i].getAddr()].getNewPosition();
+                buffer.push_back(-(char)overlaps[i]->getLength());
+                value = (short)overlaps[overlaps[i]->getAddr()]->getNewPosition();
                 putShort(&buffer, value);
-                i += overlaps[i].getLength() - 1;
+                i += overlaps[i]->getLength() - 1;
             }
         }
         else {
@@ -67,21 +70,21 @@ void    Compressor::getOverlaps()
             }
             if ((tmp = getOverlap(i, j)) >= MIN_OVERLAP) {
                 if (tmp > length) {
-                    if (overlaps[i].isSet())
-                        overlaps[i].setLength(tmp);
+                    if (overlaps[i] != nullptr)
+                        overlaps[i]->setLength(tmp);
                     length = tmp;
                 }
-                if (!overlaps[i].isSet())
-                    overlaps[i] = Overlap(i, length, -1, true);
-                setBusy(overlaps[j] = Overlap(j, tmp, i, false));
+                if (overlaps[i] == nullptr)
+                    overlaps[i] = new Overlap(i, length, -1, true);
+                setBusy(overlaps[j] = new Overlap(j, tmp, i, false));
                 j += tmp;
                 continue;
             }
             ++j;
         }
-        if (overlaps[i].isSet()) {
+        if (overlaps[i] != nullptr) {
             setBusy(overlaps[i]);
-            i += overlaps[i].getLength();
+            i += overlaps[i]->getLength();
         }
         ++i;
     }
@@ -93,7 +96,7 @@ int     Compressor::insertEmptyBytes(int start) {
         int tmp;
 
         count = 0;
-        while (start + count < lengthIn && !overlaps[start + count].isSet())
+        while (start + count < lengthIn && overlaps[start + count] == nullptr)
             count++;
 
         int blocks = count % MAX_BYTE > 0 ? count / MAX_BYTE + 1 : count / MAX_BYTE;
@@ -121,21 +124,21 @@ void    Compressor::setNewPositions()
     for (int i = 0; i < lengthIn; i++) 
     {
         
-        if (!overlaps[i].isSet()) {
+        if (overlaps[i] == nullptr) {
             tmp = getEmptyLength(i);
             i += tmp - 1;
             shift += tmp % MAX_BYTE > 0 ? tmp / MAX_BYTE + 1 : tmp / MAX_BYTE;
             shift += tmp;
         }
-        else if (overlaps[i].isSet() && !overlaps[i].isOrigin()) {
-            overlaps[i].setNewPosition(shift + 1);
+        else if (overlaps[i] != nullptr && !overlaps[i]->isOrigin()) {
+            overlaps[i]->setNewPosition(shift + 1);
             shift += 1 + LENGTH_ADDRESS;
-            i =  overlaps[i].getEnd() - 1;
+            i =  overlaps[i]->getEnd() - 1;
         }
-        else if (overlaps[i].isSet() && overlaps[i].isOrigin()) {
-            overlaps[i].setNewPosition(shift + 1);
-            shift += 1 + (overlaps[i].getLength());
-            i = overlaps[i].getEnd() - 1;
+        else if (overlaps[i] != nullptr && overlaps[i]->isOrigin()) {
+            overlaps[i]->setNewPosition(shift + 1);
+            shift += 1 + (overlaps[i]->getLength());
+            i = overlaps[i]->getEnd() - 1;
         }
     }
     lengthOut = shift;
@@ -144,15 +147,15 @@ void    Compressor::setNewPositions()
 int     Compressor::getEmptyLength(int start) 
 {
     int i = 0;
-    while (i + start < lengthIn && !overlaps[i + start].isSet()) 
+    while (i + start < lengthIn && overlaps[i + start] == nullptr) 
     {
         ++i;
     }
     return i;
 }
 
-void    Compressor::setBusy(Overlap overlap) {
-    for (int i = overlap.getPosition(); i < overlap.getEnd(); ++i)
+void    Compressor::setBusy(Overlap *overlap) {
+    for (int i = overlap->getPosition(); i < overlap->getEnd(); ++i)
     busy[i] = true;
 }
 
