@@ -12,7 +12,6 @@ private:
     bool origin;
     int end;
     int newPosition;
-    bool isset;
 
 public:
 
