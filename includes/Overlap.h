@@ -24,7 +24,6 @@ public:
         this->origin = 0;
         newPosition = 0;
         end = 0;
-        isset = false;
     }
     Overlap(int position, int length, int addr, bool origin) 
     {
@@ -33,7 +32,6 @@ public:
         this->addr = addr;
         this->origin = origin;
         end = position + length;
-        isset = true;
     }
     int getPosition() {return position;}
     int getLength() {return length;}
@@ -41,7 +39,6 @@ public:
     bool isOrigin() {return origin;}
     int getEnd(){return end;}
     int getNewPosition() {return newPosition;}
-    bool isSet() {return isset;}
     void setPosition(int position) {this->position = position;}
     void setLength(int length) {
         this->length = length;
@@ -50,7 +47,6 @@ public:
     void setAddr(int addr) {this->addr = addr;}
     void setOrigin(bool origin) {this->origin = origin;}
     void setNewPosition(int newPosition) {this->newPosition = newPosition;}
-    void set() {isset = true;}
 };
 
 #endif
