@@ -172,6 +172,6 @@ int     Compressor::getOverlap(int origin, int pos)
     int i = 0;
     while (i < MAX_BYTE && i + pos < lengthIn && !busy[origin + i]
     && !busy[pos + i] && buff[origin + i] == buff[pos + i])
-        i++;
+        ++i;
     return i;
 }
